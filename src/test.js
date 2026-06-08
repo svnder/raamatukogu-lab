@@ -43,6 +43,12 @@ async function run() {
   const s = await request("GET", "/api/books/search?title=1984");
   test("Otsing töötab", s.status === 200, s.status);
   test("Leidis raamatu", s.body.count > 0, s.body);
+  console.log("\n3.1. Raamatute otsing autori järgi");
+
+  const authorSearch = await request("GET", "/api/books/search?author=orwell");
+
+  test("Autori järgi otsing töötab", authorSearch.status === 200, authorSearch.status);
+  test("Autori järgi leiti raamat", authorSearch.body.count > 0, authorSearch.body);
 
   console.log("\n4. Sisselogimine");
   const l = await request("POST", "/api/users/login", { username: "mari", password: "1234" });
