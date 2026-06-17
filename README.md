@@ -1,18 +1,42 @@
 # Raamatukogu
 
-<!-- TODO: Kirjelda mis see rakendus on (2-3 lauset) -->
+Raamatukogu on lihtne Node.js ja Expressi rakendus, mis haldab raamatute nimekirja, kasutajaid ning laenutusi. Projekt on mõeldud väikeseäri raamatukogu testimiseks ja arenduse demonstratsiooniks.
 
 ## Tehnoloogiad
 
-<!-- TODO: Lisa kasutatavad tehnoloogiad -->
+- Node.js
+- Express
+- CORS
+- GitHub Actions
 
 ## Käivitamine
 
-<!-- TODO: Lisa käivitamise juhised -->
+1. Kloneeri repostiitorium:
+   ```bash
+   git clone https://github.com/<kasutajanimi>/raamatukogu-lab.git
+   cd raamatukogu-lab
+   ```
+2. Paigalda sõltuvused:
+   ```bash
+   npm install
+   ```
+3. Käivita server:
+   ```bash
+   npm start
+   ```
+4. Ava lehitsejas või API-kliendis:
+   ```
+   http://localhost:3000
+   ```
+
+Rakendus kasutab porti `3000` vaikimisi.
 
 ## Testikasutajad
 
-<!-- TODO: Lisa testikasutajate andmed -->
+Süsteemis on kaks testkasutajat olemas:
+
+- username: `mari`, password: `1234`
+- username: `jaan`, password: `1234`
 
 ## API endpointid
 
@@ -20,34 +44,48 @@
 
 | Meetod | URL | Kirjeldus |
 |--------|-----|-----------|
-| POST | /api/users/signup | <!-- TODO --> |
-| POST | /api/users/login | <!-- TODO --> |
-| POST | /api/users/logout | <!-- TODO --> |
-| GET | /api/users/me | <!-- TODO --> |
+| POST | /api/users/signup | Loo uus kasutaja (body: username, password, name) |
+| POST | /api/users/login | Logi sisse kasutajanime ja parooliga |
+| POST | /api/users/logout | Logi välja ja eemalda sessioon |
+| GET | /api/users/me | Tagastab praegu sisse logitud kasutaja andmed |
 
 ### Raamatud
 
 | Meetod | URL | Kirjeldus |
 |--------|-----|-----------|
-| GET | /api/books | <!-- TODO --> |
-| GET | /api/books/:id | <!-- TODO --> |
-| GET | /api/books/search | <!-- TODO --> |
-| GET | /api/books/genres | <!-- TODO --> |
-| GET | /api/books/genre/:genre | <!-- TODO --> |
+| GET | /api/books | Tagastab kõik raamatud |
+| GET | /api/books/:id | Tagastab raamatu ID alusel |
+| GET | /api/books/search | Otsib raamatuid pealkirja või autori järgi |
+| GET | /api/books/genres | Tagastab kõik žanrid |
+| GET | /api/books/genre/:genre | Tagastab antud žanriga raamatud |
 
 ### Laenud
 
 | Meetod | URL | Kirjeldus |
 |--------|-----|-----------|
-| POST | /api/loans | <!-- TODO --> |
-| POST | /api/loans/:id/return | <!-- TODO --> |
-| GET | /api/loans | <!-- TODO --> |
-| GET | /api/loans/me | <!-- TODO --> |
+| POST | /api/loans | Laena raamat (body: bookId, Authorization päis vajalik) |
+| POST | /api/loans/:id/return | Tagasta laenatud raamat |
+| GET | /api/loans | Tagastab kõik laenud |
+| GET | /api/loans/me | Tagastab praeguse kasutaja laenud |
 
 ## Testid
 
-<!-- TODO: Kirjelda kuidas teste käivitada -->
+Käivita testid lokaalselt:
+
+```bash
+npm install
+node src/test.js
+```
+
+Kõik testid peavad näitama `PASS`.
 
 ## GitHub Actions
 
-<!-- TODO: Kirjelda mis toimub automaatselt -->
+Lihtne CI pipeline jooksutab:
+
+1. `npm install`
+2. `node src/server.js` taustal
+3. `node src/test.js`
+4. süntaksi kontrolli `node --check` faili `src/server.js`, `src/routes/users.js`, `src/routes/books.js`, `src/routes/loans.js`
+
+Deploy kontrolli etapis ehitatakse `docker compose build` ainult `main` branchil.

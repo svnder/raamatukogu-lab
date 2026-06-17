@@ -36,6 +36,7 @@ app.get("/api/stats", (req, res) => {
     availableBooks: data.books.filter((b) => b.available).length,
     totalLoans: data.loans.length,
     activeLoans: data.loans.filter((l) => !l.returnedAt).length,
+    returnedLoans: data.loans.filter((l) => l.returnedAt).length,
     totalUsers: data.users.length,
   });
 });

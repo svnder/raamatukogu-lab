@@ -1,0 +1,67 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Automaattestid
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lae kood alla
+        uses: actions/checkout@v4
+
+      - name: Paigalda Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Paigalda sõltuvused
+        run: npm install
+
+      - name: Käivita rakendus
+        run: node src/server.js &
+
+      - name: Oota kuni server käivitub
+        run: sleep 3
+
+      - name: Käivita testid
+        run: node src/test.js
+
+  lint:
+    name: Koodi kontroll
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lae kood alla
+        uses: actions/checkout@v4
+
+      - name: Paigalda Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Paigalda sõltuvused
+        run: npm install
+
+      - name: Kontrolli süntaksi vigu
+        run: node --check src/server.js src/routes/users.js src/routes/books.js src/routes/loans.js
+
+  deploy:
+    name: Deploy kontroll
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Lae kood alla
+        uses: actions/checkout@v4
+
+      - name: Ehita Docker image
+        run: docker compose build
+
+      - name: Teata edukast deployst
+        run: |
+          echo "Kõik testid läbisid!"
+          echo "Commit: ${{ github.sha }}"
